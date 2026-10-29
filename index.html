@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Mensajes WhatsApp · Toram · Rafael Pérez</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1a5c35;--green-mid:#2d8f58;--green-pale:#edf7f1;--green-light:#d0ead8;
+  --gold:#b8922a;--gold-pale:#fdf4df;
+  --wa:#25D366;--wa-bubble:#dcf8c6;
+  --red:#c0392b;--red-pale:#fdf0ee;
+  --blue:#1a5fa8;--blue-pale:#edf3fc;
+  --border:#e2e8e4;--bg:#f6f8f6;--white:#fff;
+  --text:#1a2518;--muted:#5a6b5a;--dark:#0e1a12;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:14px}
+
+/* NAV */
+.topbar{background:var(--dark);color:#fff;padding:.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:15px;font-weight:500;letter-spacing:.04em}
+.logo span{color:var(--gold)}
+.stage-nav{display:flex;gap:4px;flex-wrap:wrap}
+.snav{font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.65);cursor:pointer;background:none;transition:all .2s;white-space:nowrap}
+.snav.active,.snav:hover{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.35)}
+
+/* LAYOUT */
+.page{max-width:740px;margin:0 auto;padding:1.5rem 1.25rem 3rem}
+
+/* STAGE HEADER */
+.stage{margin-bottom:2.5rem}
+.stage-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:.85rem}
+.badge-green{background:var(--green-pale);color:var(--green)}
+.badge-gold{background:var(--gold-pale);color:var(--gold)}
+.badge-blue{background:var(--blue-pale);color:var(--blue)}
+.stage-title{font-size:20px;font-weight:600;color:var(--dark);margin-bottom:.35rem}
+.stage-goal{font-size:13px;color:var(--muted);line-height:1.6;border-left:3px solid var(--green-mid);padding-left:.85rem;margin-bottom:1.5rem}
+
+/* MESSAGE CARD */
+.msg-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1rem}
+.msg-card-header{padding:.75rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg)}
+.msg-label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.msg-objective{font-size:11px;color:var(--green);background:var(--green-pale);padding:2px 9px;border-radius:20px;font-weight:500}
+.msg-body{padding:1rem 1.1rem}
+
+/* WA BUBBLES */
+.wa-out{background:var(--wa-bubble);border-radius:12px 12px 2px 12px;padding:10px 13px;font-size:13.5px;line-height:1.65;color:#111;margin-bottom:.5rem;position:relative;white-space:pre-line}
+.wa-in{background:#f0f0f0;border-radius:12px 12px 12px 2px;padding:10px 13px;font-size:13px;line-height:1.6;color:#333;margin-bottom:.5rem;white-space:pre-line}
+.wa-time{font-size:10px;color:#999;text-align:right;margin-top:3px}
+.wa-label{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;margin-top:.85rem}
+.wa-label:first-child{margin-top:0}
+
+/* IMAGE SUGGESTION */
+.img-suggest{display:flex;align-items:center;gap:10px;background:var(--gold-pale);border:1px solid #e8d090;border-radius:10px;padding:.75rem 1rem;margin:.75rem 0;font-size:12px;color:#7a5810}
+.img-icon{font-size:20px;flex-shrink:0}
+.img-text strong{display:block;font-weight:600;margin-bottom:2px}
+
+/* STRATEGY BOX */
+.strategy{background:var(--green-pale);border:1px solid var(--green-light);border-radius:10px;padding:.85rem 1rem;margin:.75rem 0;font-size:12px;color:var(--green);line-height:1.6}
+.strategy strong{display:block;margin-bottom:3px;font-weight:600}
+
+/* ALERT BOX */
+.alert{display:flex;gap:9px;align-items:flex-start;border-radius:10px;padding:.8rem 1rem;margin:.75rem 0;font-size:12px;line-height:1.6}
+.alert-warn{background:var(--red-pale);border:1px solid #f5c6c0;color:var(--red)}
+.alert-info{background:var(--blue-pale);border:1px solid #bcd2f5;color:var(--blue)}
+.alert-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+/* RESPONSE PATHS */
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:.75rem}
+.path{border-radius:10px;padding:.8rem .9rem;font-size:12px;line-height:1.55}
+.path-yes{background:var(--green-pale);border:1px solid var(--green-light)}
+.path-yes .path-head{color:var(--green);font-weight:600;margin-bottom:3px}
+.path-no{background:var(--red-pale);border:1px solid #f5c6c0}
+.path-no .path-head{color:var(--red);font-weight:600;margin-bottom:3px}
+.path-body{color:var(--muted)}
+
+/* DIVIDER */
+.flow-arrow{text-align:center;color:var(--green-mid);font-size:20px;margin:.25rem 0;opacity:.5}
+
+/* COPY BTN */
+.copy-row{display:flex;justify-content:flex-end;padding:.5rem .85rem .75rem}
+.copy-btn{font-size:11px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--muted);cursor:pointer;padding:4px 11px;transition:all .15s;font-family:'DM Sans',sans-serif}
+.copy-btn:hover{background:var(--white);color:var(--text)}
+.copy-btn.ok{color:var(--green);border-color:var(--green-light)}
+
+/* STEP DIVIDER */
+.stage-sep{height:1px;background:var(--border);margin:2.5rem 0;position:relative}
+.stage-sep::after{content:attr(data-label);position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--bg);padding:0 12px;font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+
+/* QUICK REF */
+.quick-ref{background:var(--dark);color:#fff;border-radius:14px;padding:1.25rem;margin-bottom:2rem}
+.qr-title{font-size:13px;font-weight:500;color:var(--gold);margin-bottom:.85rem}
+.qr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qr-item{background:rgba(255,255,255,.06);border-radius:8px;padding:.6rem .85rem;font-size:12px;color:rgba(255,255,255,.8);line-height:1.5}
+.qr-item strong{color:#fff;display:block}
+
+.section-hidden{display:none}
+.section-hidden.visible{display:block}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">T<span>ö</span>ram · Guía WhatsApp</div>
+  <div class="stage-nav">
+    <button class="snav active" onclick="showStage('all',this)">Todo</button>
+    <button class="snav" onclick="showStage('s1',this)">Etapa 1</button>
+    <button class="snav" onclick="showStage('s2',this)">Etapa 2</button>
+    <button class="snav" onclick="showStage('s3',this)">Etapa 3</button>
+    <button class="snav" onclick="showStage('s4',this)">Etapa 4</button>
+    <button class="snav" onclick="showStage('s5',this)">Cierre</button>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- QUICK REF -->
+  <div class="quick-ref">
+    <div class="qr-title">📋 Datos clave de referencia rápida</div>
+    <div class="qr-grid">
+      <div class="qr-item"><strong>Precio actual</strong>$1,150,000 MXN / acción</div>
+      <div class="qr-item"><strong>Siguiente bloque</strong>$1,200,000 – $1,600,000</div>
+      <div class="qr-item"><strong>Total acciones</strong>2,000 · solo 1,000 al público</div>
+      <div class="qr-item"><strong>Vendidas aprox.</strong>+400 participaciones</div>
+      <div class="qr-item"><strong>Apertura</strong>Octubre 2027</div>
+      <div class="qr-item"><strong>Rendimiento/acción</strong>$14,235/mes al abrir</div>
+      <div class="qr-item"><strong>Gastos administrativos</strong>$30,000 MXN por acción (pago único)</div>
+      <div class="qr-item"><strong>Pagos rendimiento</strong>Trimestrales</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       ETAPA 1 · PRIMER CONTACTO
+  ══════════════════════════════════════ -->
+  <div class="stage" id="s1">
+    <div class="stage-badge badge-green">🌱 Etapa 1</div>
+    <div class="stage-title">Primer contacto · Lead sin respuesta previa</div>
+    <div class="stage-goal"><strong>Objetivo:</strong> Reabrir conversación de forma natural. No vender todavía. Queremos que conteste <em>algo</em> — una respuesta corta ya nos abre la puerta para el siguiente mensaje.</div>
+
+    <!-- MSG 1A -->
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 1A · Lead frío general</span>
+        <span class="msg-objective">Meta: que conteste</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m1a">Qué tal [Nombre], buen día 👋
+
+Soy Rafael, te escribo de parte de Toram — el proyecto en Mazatlán por el que en su momento solicitaste información.
+
+Quería saludarte y ver si todavía tienes curiosidad sobre el proyecto, o si surgió alguna duda con la que te pueda orientar 🙂</div>
+        <div class="wa-time">✓✓</div>
+
+        <div class="strategy">
+          <strong>¿Por qué así?</strong>
+          Tono humano, sin presión. No lanzamos números ni precios todavía. El único objetivo es que conteste — lo que sea. Si dice "sí, cuéntame", pasamos a Etapa 2. Si dice "ya no me interesa", agradecemos y cerramos.
+        </div>
+
+        <div class="paths">
+          <div class="path path-yes"><div class="path-head">✅ Responde con interés</div><div class="path-body">→ Ir directo a Etapa 2 · Mensaje 2A</div></div>
+          <div class="path path-no"><div class="path-head">❌ No responde en 5 días</div><div class="path-body">→ Enviar Mensaje 1B con ángulo diferente</div></div>
+        </div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m1a',this)">Copiar mensaje</button></div>
+    </div>
+
+    <!-- MSG 1B -->
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 1B · Segundo intento (5-7 días después)</span>
+        <span class="msg-objective">Meta: generar curiosidad con dato concreto</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m1b">Hola [Nombre] 👋
+
+Rafael de Toram nuevamente — te escribo porque hay una cosa puntual que me parece importante que sepas antes de que cambie el precio.
+
+El parque solo tiene 1,000 acciones disponibles al público en total, de las cuales ya se vendieron más de 400. El precio actual es de $1,150,000 y el siguiente bloque sube a $1,200,000.
+
+No te cuento esto para presionarte — te lo cuento porque si hay interés, conviene hablar antes de que suba el precio 🙌
+
+¿Te puedo contar cómo funciona en 5 minutos?</div>
+        <div class="wa-time">✓✓</div>
+
+        <div class="img-suggest">
+          <div class="img-icon">🖼</div>
+          <div class="img-text"><strong>Adjuntar: socio_3.JPG (plusvalía por bloques)</strong>Muestra visualmente cómo sube el precio por bloque. Argumento de urgencia real, no inventado.</div>
+        </div>
+
+        <div class="paths">
+          <div class="path path-yes"><div class="path-head">✅ Responde</div><div class="path-body">→ Etapa 2 · Mensaje 2A</div></div>
+          <div class="path path-no"><div class="path-head">❌ No responde en 7 días</div><div class="path-body">→ Un último intento: Mensaje 1C, luego pausar contacto 30 días</div></div>
+        </div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m1b',this)">Copiar mensaje</button></div>
+    </div>
+
+    <!-- MSG 1C -->
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 1C · Último intento antes de pausar</span>
+        <span class="msg-objective">Meta: cierre amigable o reactivación</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m1c">Hola [Nombre], último mensaje de mi parte por ahora 😊
+
+Entiendo que quizás no es el momento o simplemente no llegó la info en buen momento. No hay ningún problema.
+
+Si en algún momento quieres saber más sobre Toram o retomar la plática, aquí estoy. 
+
+Que te vaya muy bien 🙌</div>
+        <div class="wa-time">✓✓</div>
+
+        <div class="strategy">
+          <strong>¿Por qué este cierre?</strong>
+          Paradójicamente, este mensaje genera más respuestas que los anteriores. Al "soltar" al lead sin presión, muchos contestan. Y si no contestan, quedamos bien vistos para cuando quieran retomar.
+        </div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m1c',this)">Copiar mensaje</button></div>
+    </div>
+  </div>
+
+  <div class="stage-sep" data-label="el interesado ya respondió"></div>
+
+  <!-- ══════════════════════════════════════
+       ETAPA 2 · EXPLICAR EL CONCEPTO
+  ══════════════════════════════════════ -->
+  <div class="stage" id="s2">
+    <div class="stage-badge badge-green">🌿 Etapa 2</div>
+    <div class="stage-title">Explicar el concepto · ¿Qué es Toram?</div>
+    <div class="stage-goal"><strong>Objetivo:</strong> Que el interesado entienda qué está comprando — no solo "acciones de un parque" sino una <em>participación en la propiedad y utilidades</em> de un negocio real. Queremos terminar esta etapa con una pregunta que nos diga qué le importa más: el retorno, la seguridad, o ser socio.</div>
+
+    <!-- MSG 2A -->
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 2A · El proyecto en una idea clara</span>
+        <span class="msg-objective">Meta: que entienda el modelo</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m2a">Qué bueno [Nombre] 👌
+
+Te platico con gusto.
+
+Toram es el primer parque temático del norte de México, basado en la cultura Totorame. Se construye en Mazatlán en un terreno de 8 hectáreas con más de 15 atracciones: tirolesa, cenote, río subterráneo, shows nocturnos, rutas 4x4, spa, kayaks y más.
+
+Pero lo diferente no es el parque en sí — es cómo puedes participar en él.
+
+En lugar de que el parque pertenezca solo a los dueños, se divide en 2,000 participaciones. Tú puedes comprar una o más de ellas y convertirte en socio-propietario del parque.
+
+Eso significa que cada trimestre recibes una parte de las utilidades que genera el parque — boletos, souvenirs, renta de locales y experiencias.
+
+¿Qué te llama más la atención de esto: el retorno que genera, la seguridad de cómo está estructurado, o simplemente quieres ver los números? 📊</div>
+        <div class="wa-time">✓✓</div>
+
+        <div class="img-suggest">
+          <div class="img-icon">🖼</div>
+          <div class="img-text"><strong>Adjuntar: socio_14.JPG (render nocturno del parque)</strong>Impacto visual inmediato. Que vea a qué se parece lo que está considerando comprar.</div>
+        </div>
+
+        <div class="paths">
+          <div class="path path-yes"><div class="path-head">💰 "Los números / el retorno"</div><div class="path-body">→ Etapa 3A · Mensaje de ROI</div></div>
+          <div class="path path-yes"><div class="path-head">🔒 "La seguridad / cómo funciona"</div><div class="path-body">→ Etapa 3B · Mensaje de fideicomiso</div></div>
+        </div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m2a',this)">Copiar mensaje</button></div>
+    </div>
+
+    <!-- MSG 2B — si pregunta directamente "¿cuánto cuesta?" -->
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 2B · Si pregunta directo "¿cuánto cuesta?"</span>
+        <span class="msg-objective">Meta: dar precio con contexto, no solo el número</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">El interesado pregunta →</div>
+        <div class="wa-in">"¿Cuánto cuesta una acción?" / "¿A cuánto está?"</div>
+
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m2b">Cada participación está actualmente en $1,150,000 MXN 👆 (más $30,000 únicos de gastos administrativos)
+
+Pero hay algo importante que te da contexto sobre ese precio:
+
+El parque tiene 2,000 participaciones en total, de las cuales solo 1,000 se venden al público. Ya van más de 400 vendidas.
+
+El precio no es fijo — va subiendo por bloques conforme se venden:
+· Bloque actual → $1,150,000
+· Siguiente bloque → $1,200,000
+· Luego $1,600,000 → $2,000,000 → hasta $2,800,000
+
+O sea que quien entra hoy, además del rendimiento trimestral del parque, ya tiene una plusvalía garantizada solo por el avance en ventas.
+
+¿Quieres que te muestre cómo se ve el rendimiento mensual que genera una participación desde que abre el parque?</div>
+        <div class="wa-time">✓✓</div>
+
+        <div class="img-suggest">
+          <div class="img-icon">🖼</div>
+          <div class="img-text"><strong>Adjuntar: socio_3.JPG (tabla de plusvalía por bloques)</strong>El gráfico dice más que cualquier texto. Muestra el salto de precio de bloque en bloque.</div>
+        </div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m2b',this)">Copiar mensaje</button></div>
+    </div>
+  </div>
+
+  <div class="stage-sep" data-label="según lo que le interese al lead"></div>
+
+  <!-- ══════════════════════════════════════
+       ETAPA 3A · RENDIMIENTO / ROI
+  ══════════════════════════════════════ -->
+  <div class="stage" id="s3">
+    <div class="stage-badge badge-gold">📈 Etapa 3A · Perfil: le interesan los números</div>
+    <div class="stage-title">El rendimiento · ¿Cuánto genera?</div>
+    <div class="stage-goal"><strong>Objetivo:</strong> Que entienda el retorno proyectado de forma clara y lo compare mentalmente con otras opciones de inversión. Terminar con una pregunta que abra la conversación hacia los siguientes pasos.</div>
+
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 3A · Proyección de rendimiento</span>
+        <span class="msg-objective">Meta: que vea el número mensual y lo compare</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m3a">Perfecto, aquí van los números 📊
+
+Con una participación de $1,150,000 MXN, el rendimiento proyectado mensual es:
+
+📅 2027 (apertura) → $14,235 / mes (14.85% anual)
+📅 2028 → $18,790 / mes (19.61% anual)
+📅 2029 → $24,803 / mes (25.88% anual)
+📅 2030 → $32,734 / mes (34.16% anual)
+
+Eso representa entre 14.85% y 34.16% anual sobre tu inversión, según el año.
+
+Para comparar: hoy los CETES pagan alrededor de 6% a 28 días y 7.4% a un año. La proyección a 2030 es de 34.16% anual — más de cuatro veces la tasa a un año. Ojo: es una proyección, no un rendimiento garantizado.
+
+Y eso sin contar la plusvalía que ya tienes por entrar en el bloque actual — el precio de tu participación ya vale más en el siguiente bloque sin que el parque haya abierto todavía.
+
+Las ganancias llegan trimestralmente directo a tu cuenta, con estados financieros firmados por un contador certificado externo.
+
+¿Hay algún número en particular que quieras que te aclare? 🙂</div>
+        <div class="wa-time">✓✓</div>
+
+        <div class="img-suggest">
+          <div class="img-icon">🖼</div>
+          <div class="img-text"><strong>Adjuntar: socio_1.JPG (tabla de retorno de inversión por año)</strong>La tabla con visitantes, ingreso diario y rendimiento por participación — el argumento más visual del ROI.</div>
+        </div>
+
+        <div class="alert alert-info">
+          <div class="alert-icon">💡</div>
+          <div>Si pregunta "¿eso está garantizado?", responder con el Mensaje 3A-bis abajo — nunca decir que es garantizado, pero sí explicar la base sólida de la proyección.</div>
+        </div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m3a',this)">Copiar mensaje</button></div>
+    </div>
+
+    <!-- 3A BIS -->
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 3A-bis · "¿El rendimiento está garantizado?"</span>
+        <span class="msg-objective">Meta: generar confianza sin prometer de más</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">El interesado pregunta →</div>
+        <div class="wa-in">"¿Eso está garantizado?" / "¿Seguro que eso va a dar?"</div>
+
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m3abis">Buena pregunta, y me alegra que la hagas 👍
+
+Las proyecciones son estimaciones basadas en datos reales: Mazatlán recibe más de 4 millones de turistas al año, y el parque está calculado sobre el 15% de ese flujo, que es una cifra conservadora.
+
+Lo que sí está garantizado contractualmente es:
+✅ Si el parque no abre en octubre 2027, el desarrollador te paga una penalización mensual del 0.2% sobre tu capital — a tu favor
+✅ Una vez que el parque esté operando, puedes pedir el reembolso del 100% de tu capital si así lo decides
+✅ Los rendimientos se calculan sobre estados financieros certificados por contador externo — no los decide unilateralmente la empresa
+
+Ninguna inversión garantiza un rendimiento futuro al 100% — ni los CETES ni los bienes raíces. La diferencia aquí es que hay un activo físico real en construcción, un contrato escrito, un fideicomiso inmobiliario que se constituye a la apertura y controles contables independientes.
+
+¿Te gustaría que te explique cómo funciona la protección del fideicomiso?</div>
+        <div class="wa-time">✓✓</div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m3abis',this)">Copiar mensaje</button></div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         ETAPA 3B · SEGURIDAD / FIDEICOMISO
+    ══════════════════════════════════════ -->
+    <div class="stage-badge badge-blue" style="margin-top:1.5rem">🔒 Etapa 3B · Perfil: le preocupa la seguridad</div>
+    <div class="stage-title" style="margin-top:.5rem;margin-bottom:.35rem">El fideicomiso · ¿Cómo está protegida mi inversión?</div>
+    <div class="stage-goal"><strong>Objetivo:</strong> Eliminar el miedo principal — "¿y si me roban el dinero?" Explicar el fideicomiso de forma simple, sin términos legales. Terminar ofreciendo el contrato para que lo revise.</div>
+
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 3B · Explicar el fideicomiso</span>
+        <span class="msg-objective">Meta: que confíe en la estructura legal</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m3b">Entiendo perfectamente la duda — es lo primero que yo también preguntaría 🙌
+
+Te explico cómo funciona en sencillo, porque son dos etapas:
+
+🏗 Durante la construcción: tu aportación se recibe en la cuenta de la constructora del proyecto y se aplica a la obra. Tu participación queda respaldada por el contrato que firmas.
+
+🎢 Al abrir el parque: se constituye el fideicomiso inmobiliario de operación. El terreno de 50,000 m² y el parque ya construido pasan a ese fideicomiso, que recibe los ingresos del parque, los administra y los reparte entre los accionistas.
+
+Tu Certificado de Participación es tu título sobre esa fracción (0.05% por acción).
+
+Además el contrato incluye esto:
+📌 Si el parque no abre en octubre 2027 → te pagan una penalización mensual del 0.2% sobre tu capital
+📌 Una vez operando → puedes pedir el reembolso del 100% si decides salir
+📌 Tu participación la puedes vender, ceder o heredar en cualquier momento
+
+¿Te mando el contrato para que lo revises con calma? Es un documento de 7 páginas, bastante claro 📄</div>
+        <div class="wa-time">✓✓</div>
+
+        <div class="img-suggest">
+          <div class="img-icon">🖼</div>
+          <div class="img-text"><strong>Adjuntar: socio_5.JPG (imagen de certeza jurídica / fideicomiso)</strong>Refuerza visualmente el concepto del fideicomiso inmobiliario.</div>
+        </div>
+
+        <div class="paths">
+          <div class="path path-yes"><div class="path-head">✅ "Sí, mándame el contrato"</div><div class="path-body">→ Enviar PDF del contrato + Mensaje 4A de seguimiento (48 hrs)</div></div>
+          <div class="path path-yes"><div class="path-head">💬 Tiene más preguntas</div><div class="path-body">→ Responder puntualmente y ofrecer llamada de 10 min</div></div>
+        </div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m3b',this)">Copiar mensaje</button></div>
+    </div>
+  </div>
+
+  <div class="stage-sep" data-label="después de compartir el contrato"></div>
+
+  <!-- ══════════════════════════════════════
+       ETAPA 4 · DESPUÉS DEL CONTRATO
+  ══════════════════════════════════════ -->
+  <div class="stage" id="s4">
+    <div class="stage-badge badge-green">📋 Etapa 4</div>
+    <div class="stage-title">Seguimiento post-contrato · Resolver dudas finales</div>
+    <div class="stage-goal"><strong>Objetivo:</strong> Acompañar al interesado mientras revisa el contrato. No preguntar "¿ya decidiste?" — preguntar "¿tienes alguna duda del contrato?" Eso es más honesto y genera más confianza.</div>
+
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 4A · Seguimiento 48 hrs después de mandar contrato</span>
+        <span class="msg-objective">Meta: abrir dudas, no presionar</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m4a">Hola [Nombre] 👋
+
+¿Tuviste oportunidad de revisar el contrato? Si tienes alguna duda sobre alguna cláusula o algo que no quedó claro, con gusto te lo explico 🙂</div>
+        <div class="wa-time">✓✓</div>
+
+        <div class="alert alert-warn">
+          <div class="alert-icon">⚠️</div>
+          <div>No escribir "¿ya te decidiste?" ni "¿qué piensas?" Eso genera presión. La pregunta sobre el contrato es mucho más natural y menos invasiva.</div>
+        </div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m4a',this)">Copiar mensaje</button></div>
+    </div>
+
+    <!-- OBJECIONES FRECUENTES -->
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 4B · "No tengo el millón ahorita"</span>
+        <span class="msg-objective">Meta: explorar alternativas sin perder el lead</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">El interesado dice →</div>
+        <div class="wa-in">"Me interesa pero no tengo el monto completo ahorita"</div>
+
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m4b">Tiene todo el sentido 👍
+
+El contrato permite estructurar el pago en parcialidades — no tiene que ser todo de un solo golpe. Los plazos y montos los acordamos directamente según tu situación.
+
+Lo que sí te recomiendo es apartar tu lugar en el bloque actual antes de que suba el precio, porque el incremento al siguiente bloque puede darse en cualquier momento conforme avancen las ventas.
+
+Si quieres, hablamos un momento por llamada o videollamada esta semana y te explico las opciones de pago disponibles — son 10 minutos y te vas con todo claro 📲
+
+¿Cuándo tienes un momento?</div>
+        <div class="wa-time">✓✓</div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m4b',this)">Copiar mensaje</button></div>
+    </div>
+
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 4C · "Necesito consultarlo con mi esposa/socio"</span>
+        <span class="msg-objective">Meta: facilitar esa conversación, no bloquearla</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">El interesado dice →</div>
+        <div class="wa-in">"Tengo que hablarlo con mi esposa" / "Lo platico con mi socio"</div>
+
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m4c">Por supuesto, eso es lo correcto 👌
+
+Para que sea más fácil esa conversación, ¿quieres que te mande un resumen visual de la propuesta? Así tienen todo en un solo lugar sin que tengan que leer el contrato completo.
+
+También puedo hacer una llamada corta con los dos si quieren — a veces es más fácil resolver dudas en tiempo real que por mensajes.
+
+¿Qué te parece más cómodo?</div>
+        <div class="wa-time">✓✓</div>
+
+        <div class="strategy">
+          <strong>Tip:</strong> Aquí es buen momento para compartir el link del microsite. "El resumen visual" es exactamente para lo que sirve la página — que otra persona pueda entenderlo sin un asesor de por medio.
+        </div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m4c',this)">Copiar mensaje</button></div>
+    </div>
+
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 4D · "¿Y si el proyecto se cae?"</span>
+        <span class="msg-objective">Meta: desmontarla con hechos, no con entusiasmo</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">El interesado dice →</div>
+        <div class="wa-in">"¿Qué pasa si el proyecto no sale adelante?"</div>
+
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m4d">Es la pregunta más importante y me alegra que la hagas directo 👍
+
+Hay que separar las dos etapas. Hoy el proyecto está en construcción — ya hay obra en proceso, no es un proyecto en papel — y tu aportación se aplica a esa obra bajo un contrato firmado. Al abrir el parque, el terreno y el parque construido se integran a un fideicomiso inmobiliario, fuera del patrimonio de la empresa, que administra los ingresos y los reparte entre los accionistas.
+
+Además, el desarrollador tiene compromisos legales concretos: si no abre en octubre 2027, paga penalización mensual. Si ya abrió y decides salir, te devuelven el 100%.
+
+No existe inversión sin riesgo cero. Pero lo que existe aquí es un activo físico real, un fideicomiso inmobiliario por constituirse a la apertura y garantías legales escritas en el contrato.
+
+Si quieres, te mando el contrato para que lo revise un abogado de tu confianza — no hay ningún problema con eso 📄</div>
+        <div class="wa-time">✓✓</div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m4d',this)">Copiar mensaje</button></div>
+    </div>
+  </div>
+
+  <div class="stage-sep" data-label="cuando ya hay decisión de compra"></div>
+
+  <!-- ══════════════════════════════════════
+       ETAPA 5 · CIERRE
+  ══════════════════════════════════════ -->
+  <div class="stage" id="s5">
+    <div class="stage-badge badge-gold">🤝 Etapa 5 · Cierre</div>
+    <div class="stage-title">Cierre · Facilitar el primer paso</div>
+    <div class="stage-goal"><strong>Objetivo:</strong> No "cerrar" en el sentido agresivo — facilitar el siguiente paso concreto. El cierre en Toram es simple: firma de la Solicitud de Oferta + primer depósito. Hacerlo fácil y claro.</div>
+
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 5A · El interesado dice que quiere proceder</span>
+        <span class="msg-objective">Meta: dar los pasos exactos sin complicar</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m5a">¡Excelente [Nombre]! 🙌
+
+El proceso para arrancar es muy sencillo:
+
+1️⃣ Llenamos la Solicitud de Oferta — te la mando ahora mismo, son tus datos básicos y la declaración de que fuiste informado sobre el proyecto
+
+2️⃣ Realizas el pago inicial o el monto acordado a la cuenta de Banorte:
+· Beneficiario: Toram Residencial y Parque Temático S.A. de C.V.
+· CLABE: 072 744 012 064 178 768
+
+3️⃣ Me mandas el comprobante de transferencia
+
+4️⃣ Firmamos el Contrato Mandato de Inversión y recibes tu Certificado de Participación
+
+Nota: adicional al precio de $1,150,000 por participación hay $30,000 MXN de gastos administrativos (pago único). Se cobra como apartado y, al aceptarse la oferta, pasa a ser el pago de esos gastos.
+
+¿Quieres que te mande la Solicitud de Oferta para que la revises?</div>
+        <div class="wa-time">✓✓</div>
+
+        <div class="strategy">
+          <strong>Documentos a adjuntar en este mensaje:</strong>
+          PDF de la Solicitud de Oferta (Solicitud_mayo_socio_.pdf). No el contrato completo aún — eso va después de que llenen la solicitud.
+        </div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m5a',this)">Copiar mensaje</button></div>
+    </div>
+
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">Mensaje 5B · Confirmación de pago recibido</span>
+        <span class="msg-objective">Meta: dar certeza y el siguiente paso</span>
+      </div>
+      <div class="msg-body">
+        <div class="wa-label">El interesado manda comprobante →</div>
+        <div class="wa-in">[comprobante de transferencia]</div>
+
+        <div class="wa-label">Tú escribes →</div>
+        <div class="wa-out" id="m5b">Confirmado [Nombre] ✅
+
+Recibimos tu pago. Bienvenido como socio-inversionista de Toram 🎉
+
+El siguiente paso es firmar el Contrato Mandato de Inversión. Lo coordinamos esta semana — puede ser presencial aquí en Mazatlán o te lo enviamos para firma.
+
+En cuanto esté firmado, recibes tu Certificado de Participación que es tu título oficial como titular de derechos fiduciarios del parque.
+
+Si tienes cualquier duda en este proceso, aquí estoy. ¡Nos vemos pronto! 🙌</div>
+        <div class="wa-time">✓✓</div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m5b',this)">Copiar mensaje</button></div>
+    </div>
+
+    <!-- MICROSITE PLACEMENT -->
+    <div class="msg-card">
+      <div class="msg-card-header">
+        <span class="msg-label">¿Cuándo compartir el link del microsite?</span>
+        <span class="msg-objective">Último recurso de conversación</span>
+      </div>
+      <div class="msg-body">
+        <div class="strategy">
+          <strong>Momentos ideales para compartir el link:</strong>
+          1. Cuando el interesado necesita explicárselo a otra persona (cónyuge, socio, familiar)<br>
+          2. Cuando dice "mándame algo que pueda ver con calma"<br>
+          3. Cuando no tienes tiempo de explicar en ese momento<br>
+          4. Como refuerzo visual después de una llamada
+        </div>
+
+        <div class="wa-label">Texto para acompañar el link →</div>
+        <div class="wa-out" id="m5link">Te mando la página del proyecto [Nombre] 👇
+
+Ahí tienes todo explicado: el parque, las proyecciones de rendimiento con una calculadora interactiva, el proceso de inversión y las preguntas frecuentes más comunes.
+
+[LINK DEL MICROSITE]
+
+Si tienes alguna duda después de revisarlo, aquí estoy 🙂</div>
+        <div class="wa-time">✓✓</div>
+
+        <div class="alert alert-warn">
+          <div class="alert-icon">⚠️</div>
+          <div>No compartir el link en el primer mensaje — primero hay que construir interés personal. El link es para cuando ya hay conversación y el lead necesita revisar a su propio ritmo o compartirlo con alguien más.</div>
+        </div>
+      </div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyMsg('m5link',this)">Copiar mensaje</button></div>
+    </div>
+
+  </div>
+
+</div><!-- /page -->
+
+<script>
+function copyMsg(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const text = el.innerText.replace(/\n{3,}/g, '\n\n').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '¡Copiado!';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = 'Copiar mensaje'; btn.classList.remove('ok'); }, 2000);
+  });
+}
+
+function showStage(id, btn) {
+  document.querySelectorAll('.snav').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const stages = ['s1','s2','s3','s4','s5'];
+  const seps = document.querySelectorAll('.stage-sep');
+  if (id === 'all') {
+    stages.forEach(s => { document.getElementById(s).style.display = 'block'; });
+    seps.forEach(s => s.style.display = 'block');
+  } else {
+    stages.forEach(s => {
+      document.getElementById(s).style.display = (s === id) ? 'block' : 'none';
+    });
+    seps.forEach(s => s.style.display = 'none');
+  }
+}
+</script>
+</body>
+</html>
